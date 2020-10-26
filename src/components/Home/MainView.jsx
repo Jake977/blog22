@@ -11,6 +11,7 @@ const MainView = (props) => {
     return (
         <div>
             <ArticlesList
+
                 loading={props.loading}
                 articles={props.articles}
                 pager={props.pager}
