@@ -13,7 +13,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
     onLoad: (articlesFilter, pager, payload) =>
-        dispatch(actionCreators.doHomeLoaded(articlesFilter, pager, payload)),
+        dispatch(actionCreators.doHomeLoaded(pager, payload)),
     onUnload: () =>
         dispatch(actionCreators.doHomeUnloaded()),
 });
@@ -21,9 +21,7 @@ const mapDispatchToProps = dispatch => ({
 class Home extends React.Component {
 
     componentDidMount()  {
-        //const articlesFilter = this.props.token ? 'userArticles' : 'all';
         const articlesFilter = 'all';
-        //const articlesPromise = this.props.token ? userService.articles.userArticles : userService.articles.all;
         const articlesPromise = userService.articles.all;
         this.props.onLoad(
             articlesFilter, articlesPromise, Promise.all([userService.tags.getTags(), articlesPromise()])

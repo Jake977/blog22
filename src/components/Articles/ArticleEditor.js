@@ -6,6 +6,7 @@ import { push } from "react-router-redux";
 import { Form, Input, Button } from "antd";
 import { store } from "../../store";
 import actionCreators from "../../actionCreators";
+import '../../css/loadspiner.css';
 
 const formItemLayout = {
   labelCol: { span: 24 },
@@ -99,8 +100,19 @@ class ArticleEditor extends React.Component {
       tags: this.props?.tagList
     };
 
+    const loadingMessage = (
+        <div className="loadingPlaceHolder">
+          Loading
+          <div className="spinner">
+            <div className="bounce1" />
+            <div className="bounce2" />
+            <div className="bounce3" />
+          </div>
+        </div>
+    );
+
     return this.isLoading ? (
-      "loading..."
+        loadingMessage
     ) : (
       <div className="editor-page">
         <div className="container page">

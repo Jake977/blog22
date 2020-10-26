@@ -38,7 +38,7 @@ const ArticlesPagination = (props) => {
                         };
                         return (
                             <li
-                                className={ isCurrent ? 'pagination-item active' : 'pagination-item' }
+                                className='pagination-item'
                                 onClick={onClick}
                                 key={v.toString()}>
                                 <button className={isCurrent ? 'pagination-btn active' : 'pagination-btn'}>
