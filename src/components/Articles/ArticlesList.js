@@ -5,7 +5,8 @@ import '../../css/loadspiner.css';
 
 const ArticlesList = (props) => {
     const articles = props.articles;
-    const {pager, articlesCount, currentPage} = props;
+    const {pager, articlesCount, currentPage, isUserLoggedIn} = props;
+
     if (!articles) {
         return (
             <div className="articlePreview">
@@ -33,7 +34,7 @@ const ArticlesList = (props) => {
         <div>
             { articles.map(article => {
                     return (
-                        <ArticlesPreview key={article.slug} article={article}  />
+                        <ArticlesPreview key={article.slug} article={article} isUserLoggedIn={isUserLoggedIn}/>
                     );
                 })
             }
@@ -47,4 +48,3 @@ const ArticlesList = (props) => {
 };
 
 export default ArticlesList;
-

@@ -6,7 +6,6 @@ import { push } from "react-router-redux";
 import { Form, Input, Button } from "antd";
 import { store } from "../../store";
 import actionCreators from "../../actionCreators";
-import '../../css/loadspiner.css';
 
 const formItemLayout = {
   labelCol: { span: 24 },
@@ -63,16 +62,19 @@ class ArticleEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("id", prevProps.match.params.id);
-    if (prevProps.match.params.id !== prevProps.match.params.id) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
       if (prevProps.match.params.id) {
         this.props.onUnload();
-        return this.props.onLoad(
-          userService.articles.get(this.props.match.params.id)
-        );
       }
+
+      this.id = this.props.match.params.id;
+      if (this.id) {
+        return this.props.onLoad(userService.articles.get(this.id));
+      }
+
       this.props.onLoad(null);
     }
+
     this.isLoading = false;
   }
 
@@ -89,30 +91,25 @@ class ArticleEditor extends React.Component {
     this.props.onUnload();
   }
 
+  shouldComponentUpdate(newProps, newState) {
+    if (this.props.match.params.id !== newProps.match.params.id) {
+      this.isLoading = true;
+    }
+
+    return true;
+  }
+
   render() {
     const { errors } = this.props;
-    console.log(this.props.location.pathname);
-
-    const initialValues = this.props.location.pathname === '/add' ? {} : {
+    const initialValues = {
       title: this.props?.title,
       body: this.props?.body,
       description: this.props?.description,
       tags: this.props?.tagList
     };
 
-    const loadingMessage = (
-        <div className="loadingPlaceHolder">
-          Loading
-          <div className="spinner">
-            <div className="bounce1" />
-            <div className="bounce2" />
-            <div className="bounce3" />
-          </div>
-        </div>
-    );
-
     return this.isLoading ? (
-        loadingMessage
+      "loading..."
     ) : (
       <div className="editor-page">
         <div className="container page">

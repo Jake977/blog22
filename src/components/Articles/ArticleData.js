@@ -17,6 +17,7 @@ const mapDispatchToProps = dispatch => ({
 const ArticleData = (props) => {
     const article = props.article;
     const authorImage = article.author.image;
+    const isUserLoggedIn = props.isUserLoggedIn;
 
     const handleLikeClick = (e) => {
         e.preventDefault();
@@ -44,9 +45,10 @@ const ArticleData = (props) => {
                 <div className="articlePreview__titleBlock">
                     <div className="articlePreview__title">{article.title}</div>
                     <div className="articlePreview__like">
-                        <Button  onClick={handleLikeClick}>
-                            <HeartTwoTone twoToneColor={article.favorited ? "red" : "gray"} /> {article.favoritesCount}
-                        </Button>
+                            <Button onClick={handleLikeClick} disabled={!isUserLoggedIn}>
+                                <HeartTwoTone
+                                    twoToneColor={article.favorited ? "red" : "gray"}/> {article.favoritesCount}
+                            </Button>
                     </div>
                 </div>
                 <div className="articlePreview__date">
@@ -65,5 +67,7 @@ const ArticleData = (props) => {
         </div>
     )
 };
+
+//export default connect(mapStateToProps, mapDispatchToProps)(ArticleData);
 
 export default connect(() => ({}), mapDispatchToProps)(ArticleData);

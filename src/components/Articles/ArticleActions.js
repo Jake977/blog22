@@ -22,9 +22,9 @@ const ArticleActions = props => {
     return (
         <div className="articlePage__buttons">
             <Link to={`/article/${article.slug}/edit`}>
-                <Button>Edit</Button>
+                <Button className="actionBtn">Edit</Button>
             </Link>
-            <Button onClick={del} danger>Delete</Button>
+            <Button className="actionBtn" onClick={del} danger>Delete</Button>
         </div>
     );
 };

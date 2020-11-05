@@ -11,7 +11,7 @@ const MainView = (props) => {
     return (
         <div>
             <ArticlesList
-
+                isUserLoggedIn={props.token ? true : false}
                 loading={props.loading}
                 articles={props.articles}
                 pager={props.pager}

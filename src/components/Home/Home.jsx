@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLoad: (pager, payload) =>
-        dispatch(actionCreators.doHomeLoaded(pager, payload)),
+    onLoad: (articlesFilter, pager, payload) =>
+        dispatch(actionCreators.doHomeLoaded(articlesFilter, pager, payload)),
     onUnload: () =>
         dispatch(actionCreators.doHomeUnloaded()),
 });

@@ -137,7 +137,7 @@ a {
 }
 
 .pagination,
-.pagination li a {
+.pagination li {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -157,6 +157,7 @@ a {
   min-width: 20px;
   min-height: 20px;
   color: rgba(0, 0, 0, .75);
+  cursor: pointer;
 }
 
 .pagination-btn.active {
@@ -165,16 +166,16 @@ a {
   color: #fff;
 }
 
-.pagination a:hover:not(.active) {
+.pagination-btn:hover:not(.active) {
   background-color: #ddd;
-}
-
-.article {
-
 }
 
 .loadingPlaceHolder {
   width: 502px;
   height: 50px;
   text-align: center;
+}
+
+.actionBtn {
+  margin-right: 8px;
 }
