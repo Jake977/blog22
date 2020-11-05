@@ -34,7 +34,11 @@ const ArticlesList = (props) => {
         <div>
             { articles.map(article => {
                     return (
-                        <ArticlesPreview key={article.slug} article={article} isUserLoggedIn={isUserLoggedIn}/>
+                        <ArticlesPreview
+                            key={article.slug}
+                            article={article}
+                            isUserLoggedIn={isUserLoggedIn}
+                        />
                     );
                 })
             }

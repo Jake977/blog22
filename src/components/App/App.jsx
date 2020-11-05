@@ -55,6 +55,7 @@ class App extends React.Component {
                         currentUser={currentUser} />
                     <Switch>
                         <Route exact path="/" component={ Home } />
+                        <Route exact path="/blog22" component={ Home } />
                         <Route path="/login" component={ !currentUser ? Login : Home } />
                         <Route path="/add" component={ !currentUser ? Login : ArticleEditor } />
                         <Route path="/article/:id/edit" component={ !currentUser ? Login : ArticleEditor } />

@@ -43,8 +43,6 @@ const omitSlug = (article) => Object.assign({}, article, { slug: undefined });
 const articles = {
     all: page =>
         requests.get(`/articles?${limit(10, page)}`),
-    userArticles: () =>
-        requests.get('/articles/feed?limit=10&offset=0'),
     get: slug =>
         requests.get(`/articles/${slug}`),
     create: article =>

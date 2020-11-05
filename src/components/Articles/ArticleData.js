@@ -47,7 +47,8 @@ const ArticleData = (props) => {
                     <div className="articlePreview__like">
                             <Button onClick={handleLikeClick} disabled={!isUserLoggedIn}>
                                 <HeartTwoTone
-                                    twoToneColor={article.favorited ? "red" : "gray"}/> {article.favoritesCount}
+                                    twoToneColor={article.favorited ? "red" : "gray"}
+                                /> {article.favoritesCount}
                             </Button>
                     </div>
                 </div>
