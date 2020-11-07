@@ -21,7 +21,7 @@ const ArticlesPagination = (props) => {
     const setPage = (page) => {
         if(props.pager) {
             props.onSetPage(page, props.pager(page));
-        }else {
+        } else {
             props.onSetPage(page, userService.articles.all(page))
         }
     };
