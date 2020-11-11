@@ -12,8 +12,6 @@ body, #root {
   margin: 0 auto;
   padding: 48px 32px;
   box-sizing: border-box;
-  //border: 1px solid #D9D9D9;
-  //border-radius: 6px;
 }
 
 a {
@@ -144,11 +142,32 @@ a {
 }
 
 .loadingPlaceHolder {
-  width: 502px;
-  height: 50px;
+  background: #FFFFFF;
+  border-radius: 5px;
+  padding-top: 30px;
+  width: 100%;
+  height: 150px;
   text-align: center;
 }
 
 .actionBtn {
   margin-right: 8px;
 }
+
+.page {
+  background: #FFFFFF;
+  border-radius: 5px;
+  padding: 32px;
+  margin: 25px 80px;
+
+  &__title {
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    color: #262626;
+  }
+}
+
+
+
+

@@ -3,8 +3,7 @@ import userService from "../../services/userService"; //
 import { connect } from 'react-redux'; //
 import actionCreators from "../../actionCreators";
 import ArticlesPreview from './ArticlesPreview';
-import {Pagination} from 'antd';
-import '../../css/loadspiner.css';
+import {Pagination, Spin} from 'antd';
 
 const mapDispatchToProps = (dispatch) => ({
     onSetPage: (page, payload) =>
@@ -26,15 +25,8 @@ const ArticlesList = (props) => {
 
     if (!articles) {
         return (
-            <div className="articlePreview">
-                <div className="loadingPlaceHolder">
-                    Loading
-                    <div className="spinner">
-                        <div className="bounce1" />
-                        <div className="bounce2" />
-                        <div className="bounce3" />
-                    </div>
-                </div>
+            <div className="loadingPlaceHolder">
+                <Spin tip="Loading..." size="large"></Spin>
             </div>
         );
     }
@@ -61,7 +53,7 @@ const ArticlesList = (props) => {
                 })
             }
             </div>
-            <div className='pagination'>
+            <div className="pagination">
                 <Pagination
                     defaultCurrent={1}
                     current={currentPage}

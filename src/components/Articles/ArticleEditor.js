@@ -3,7 +3,7 @@ import ErrorsList from "../ErrorsList/ErrorsList";
 import userService from "../../services/userService";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Spin } from "antd";
 import { store } from "../../store";
 import actionCreators from "../../actionCreators";
 
@@ -71,7 +71,6 @@ class ArticleEditor extends React.Component {
       if (this.id) {
         return this.props.onLoad(userService.articles.get(this.id));
       }
-
       this.props.onLoad(null);
     }
 
@@ -109,13 +108,17 @@ class ArticleEditor extends React.Component {
     };
 
     return this.isLoading ? (
-      "loading..."
+        <div className="loadingPlaceHolder">
+          <Spin tip="Loading..." size="large"></Spin>
+        </div>
     ) : (
       <div className="editor-page">
         <div className="container page">
-          <div className="">
-            <div className="">
-              <ErrorsList errors={errors}></ErrorsList>
+          <ErrorsList errors={errors}></ErrorsList>
+          <div className='page__title'>
+            {this.props.articleSlug ? 'Edit article' : 'Create new article'}
+          </div>
+          <div className="page__content">
               <Form
                 {...formItemLayout}
                 initialValues={initialValues}
@@ -171,7 +174,6 @@ class ArticleEditor extends React.Component {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }

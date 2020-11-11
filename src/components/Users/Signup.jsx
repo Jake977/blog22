@@ -3,9 +3,10 @@ import ErrorsList from '../ErrorsList/ErrorsList';
 import React from 'react';
 import userService from '../../services/userService';
 import { connect } from 'react-redux';
-import './loginForm.scss';
 import { Form, Input, Button } from 'antd';
 import actionCreators from "../../actionCreators";
+import './LoginForm.scss';
+
 
 const formItemLayout = {
     labelCol: { span: 24},

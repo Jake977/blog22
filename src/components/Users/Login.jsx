@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import userService from "../../services/userService";
 import actionCreators from '../../actionCreators';
 import { Form, Input, Button } from 'antd';
-import './loginForm.scss';
+import './LoginForm.scss';
 
 const mapStateToProps = (state) => ({ ...state.authorization });
 

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Avatar } from "antd";
 import userPic from '../../img/userDefaultImage.png';
-import './topBar.scss';
+import './TopBar.scss';
 import actionCreators from "../../actionCreators";
 
 const mapStateToProps = (state) => ({
