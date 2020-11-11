@@ -14,7 +14,6 @@ const MainView = (props) => {
                 isUserLoggedIn={props.token ? true : false}
                 loading={props.loading}
                 articles={props.articles}
-                pager={props.pager}
                 articlesCount={props.articlesCount}
                 currentPage={props.currentPage}
             />

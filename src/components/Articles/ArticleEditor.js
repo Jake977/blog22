@@ -109,7 +109,7 @@ class ArticleEditor extends React.Component {
 
     return this.isLoading ? (
         <div className="loadingPlaceHolder">
-          <Spin tip="Loading..." size="large"></Spin>
+          <Spin tip="Loading..." size="large" />
         </div>
     ) : (
       <div className="editor-page">

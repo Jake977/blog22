@@ -6,7 +6,7 @@ const doRedirect = (payload) => ({ type: 'REDIRECT', payload });
 const doSetPage = (page, payload) => ({ type: 'SET_PAGE', page, payload });
 
 const doAppLoad = (payload, token) => ({ type: 'APP_LOAD', payload, token });
-const doHomeLoaded = (tag, pager, payload) => ({ type: 'HOME_PAGE_LOADED', tag, pager, payload });
+const doHomeLoaded = (payload) => ({ type: 'HOME_PAGE_LOADED', payload });
 const doHomeUnloaded = () => ({ type: 'HOME_PAGE_UNLOADED' });
 
 const doArticlePageLoaded = (payload) => ({ type: 'ARTICLE_PAGE_LOADED', payload });

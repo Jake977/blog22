@@ -26,7 +26,7 @@ const ArticlesList = (props) => {
     if (!articles) {
         return (
             <div className="loadingPlaceHolder">
-                <Spin tip="Loading..." size="large"></Spin>
+                <Spin tip="Loading..." size="large" />
             </div>
         );
     }
@@ -59,7 +59,7 @@ const ArticlesList = (props) => {
                     current={currentPage}
                     onChange={(page, pageSize) => onChange(page, pageSize)}
                     total={articlesCount}
-                    showSizeChanger={true}
+                    showSizeChanger
                     showQuickJumper
                 />
             </div>

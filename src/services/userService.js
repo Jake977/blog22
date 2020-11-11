@@ -1,7 +1,7 @@
 import superagent from 'superagent';
 
 const API_URL = 'https://conduit.productionready.io/api';
-const defaultPageSize = 10;
+const defaultPageSize = 10; //default articles number per page
 
 const responseBody = (res) => res.body;
 let token = null;

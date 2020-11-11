@@ -4,9 +4,9 @@ import userService from "../../services/userService";
 import { connect } from 'react-redux';
 import actionCreators from "../../actionCreators";
 import { Button } from "antd";
-import {store} from "../../store";
-import {push} from "react-router-redux";
-import {DeleteTwoTone, EditTwoTone} from '@ant-design/icons';
+import { store } from "../../store";
+import { push } from "react-router-redux";
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 
 const mapDispatchToProps = dispatch => ({
     onClickDelete: payload =>
