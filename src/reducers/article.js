@@ -10,25 +10,11 @@ export default (state = {}, action) => {
         case ARTICLE_LIKE:
         case ARTICLE_UNLIKE:
             return {
-                ...state.article,
-                //article: action.payload[0].article.favorited,
-                favorited: action.payload.article.favorited,
-                favoritesCount: action.payload.article.favoritesCount
+                ...state,
+                //favorited: action.payload.article.favorited,
+                //favoritesCount: action.payload.article.favoritesCount
             };
 
-            // return {
-            //     ...state,
-            //     articles: state.articles.map(article => {
-            //         if (article.slug === action.payload.article.slug) {
-            //             return {
-            //                 ...article,
-            //                 favorited: action.payload.article.favorited,
-            //                 favoritesCount: action.payload.article.favoritesCount
-            //             };
-            //         }
-            //         return article;
-            //     })
-            // };
         case ARTICLE_PAGE_LOADED:
             return {
                 ...state,
