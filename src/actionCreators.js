@@ -15,6 +15,7 @@ const doArticleDelete = (payload) => ({ type: 'DELETE_ARTICLE', payload });
 
 const doArticleLike = (payload) => ({ type: 'ARTICLE_LIKE', payload });
 const doArticleUnlike = (payload) => ({ type: 'ARTICLE_UNLIKE', payload });
+
 const doArticleSubmitted = (payload) =>({type: 'ARTICLE_SUBMITTED', payload});
 const doUpdateFieldEditor = (key, value) =>({type: 'UPDATE_FIELD_EDITOR', key, value});
 

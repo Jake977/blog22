@@ -50,7 +50,6 @@ class Article extends React.Component {
                         <div>{article.body}</div>
                     </div>
                 </div>
-
             </div>
         );
     }
