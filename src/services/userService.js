@@ -1,6 +1,7 @@
 import superagent from 'superagent';
 
 const API_URL = 'https://conduit.productionready.io/api';
+const defaultPageSize = 10;
 
 const responseBody = (res) => res.body;
 let token = null;
@@ -18,8 +19,6 @@ const authorization = {
         requests.post('/users/login', { user: { email, password } }),
     signup: (username, email, password) =>
         requests.post('/users', { user: { username, email, password } }),
-    save: user =>
-        requests.put('/user', { user })
 };
 
 const requests = {
@@ -41,8 +40,8 @@ const limit = (count, page) => `limit=${count}&offset=${page ? page * count : 0}
 const omitSlug = (article) => Object.assign({}, article, { slug: undefined });
 
 const articles = {
-    all: page =>
-        requests.get(`/articles?${limit(10, page)}`),
+    all: (page, pageSize = defaultPageSize) =>
+        requests.get(`/articles?${limit(pageSize, page)}`),
     get: slug =>
         requests.get(`/articles/${slug}`),
     create: article =>

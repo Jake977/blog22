@@ -1,33 +1,28 @@
 import React from 'react';
 import userService from "../../services/userService"; //
 import { connect } from 'react-redux'; //
+import actionCreators from "../../actionCreators";
 import ArticlesPreview from './ArticlesPreview';
-import ArticlesPagination from "./ArticlesPagination";
 import {Pagination} from 'antd';
 import '../../css/loadspiner.css';
-import actionCreators from "../../actionCreators";
 
-///
 const mapDispatchToProps = (dispatch) => ({
     onSetPage: (page, payload) =>
         dispatch(actionCreators.doSetPage(page, payload))
 });
-///
+
 
 const ArticlesList = (props) => {
     const articles = props.articles;
-    const {pager, articlesCount, currentPage, isUserLoggedIn} = props;
-    console.log('pager', pager);
+    const {articlesCount, currentPage, isUserLoggedIn} = props;
 
-    ///
-    const setPage = (page) => {
+    const onChange = (page, pageSize) => {
         if(props.pager) {
-            props.onSetPage(page, props.pager(page));
+            props.onSetPage(page, props.pager(page, pageSize));
         } else {
-            props.onSetPage(page, userService.articles.all(page))
+            props.onSetPage(page, userService.articles.all(page, pageSize))
         }
     };
-    ///
 
     if (!articles) {
         return (
@@ -47,13 +42,14 @@ const ArticlesList = (props) => {
     if (articles.length === 0) {
         return (
             <div className="articlePreview">
-                Have no articles
+                Have no articles yet
             </div>
         );
     }
 
     return (
         <div>
+            <div>
             { articles.map(article => {
                     return (
                         <ArticlesPreview
@@ -64,23 +60,19 @@ const ArticlesList = (props) => {
                     );
                 })
             }
-
-            <Pagination
-                defaultCurrent={1}
-                current={currentPage}
-                onChange={setPage(currentPage)}
-                total={articlesCount}
-            />
-
-            {/*<ArticlesPagination*/}
-            {/*    pager={pager}*/}
-            {/*    articlesCount={articlesCount}*/}
-            {/*    currentPage={currentPage}*/}
-            {/*/>*/}
+            </div>
+            <div className='pagination'>
+                <Pagination
+                    defaultCurrent={1}
+                    current={currentPage}
+                    onChange={(page, pageSize) => onChange(page, pageSize)}
+                    total={articlesCount}
+                    showSizeChanger={true}
+                    showQuickJumper
+                />
+            </div>
         </div>
     );
 };
 
 export default connect(() => ({}), mapDispatchToProps)(ArticlesList);
-
-//export default ArticlesList;

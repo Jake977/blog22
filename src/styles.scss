@@ -136,38 +136,11 @@ a {
   color: rgba(0, 0, 0, 0.75);
 }
 
-.pagination,
-.pagination li {
+.pagination {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-}
-
-.pagination-item {
-  list-style: none;
-  background-color: #EBEEF3;
-}
-
-.pagination-btn {
-  font-weight: 300;
-  padding-top: 1px;
-  text-decoration: none;
-  border: none;
-  min-width: 20px;
-  min-height: 20px;
-  color: rgba(0, 0, 0, .75);
-  cursor: pointer;
-}
-
-.pagination-btn.active {
-  border: none;
-  background: #1890FF;
-  color: #fff;
-}
-
-.pagination-btn:hover:not(.active) {
-  background-color: #ddd;
 }
 
 .loadingPlaceHolder {
