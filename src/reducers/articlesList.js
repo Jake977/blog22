@@ -10,6 +10,21 @@ export default (state = {}, action) => {
     switch (action.type) {
         case ARTICLE_LIKE:
         case ARTICLE_UNLIKE:
+            // return {
+            //     ...state,
+            //     article: article => {
+            //         console.log('qewqew444', article);
+            //         if (article.slug === action.payload.article.slug) {
+            //             return {
+            //                 ...article,
+            //                 favorited: action.payload.article.favorited,
+            //                 favoritesCount: action.payload.article.favoritesCount
+            //             };
+            //         }
+            //         return article;
+            //     }
+            // };
+
             return {
                 ...state,
                 articles: state.articles.map(article => {
@@ -23,6 +38,7 @@ export default (state = {}, action) => {
                         return article;
                 })
             };
+
         case SET_PAGE:
             return {
                 ...state,

@@ -1,6 +1,6 @@
 import React from 'react';
-import userService from "../../services/userService"; //
-import { connect } from 'react-redux'; //
+import userService from "../../services/userService";
+import { connect } from 'react-redux';
 import actionCreators from "../../actionCreators";
 import ArticlesPreview from './ArticlesPreview';
 import {Pagination, Spin} from 'antd';
@@ -10,10 +10,9 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actionCreators.doSetPage(page, payload))
 });
 
-
 const ArticlesList = (props) => {
-    const articles = props.articles;
-    const {articlesCount, currentPage, isUserLoggedIn} = props;
+    //const articles = props.articles;
+    const {articles, articlesCount, currentPage} = props;
 
     const onChange = (page, pageSize) => {
         if(props.pager) {
@@ -42,12 +41,11 @@ const ArticlesList = (props) => {
     return (
         <div>
             <div>
-            { articles.map(article => {
+            { articles.map( article => {
                     return (
                         <ArticlesPreview
                             key={article.slug}
                             article={article}
-                            isUserLoggedIn={isUserLoggedIn}
                         />
                     );
                 })

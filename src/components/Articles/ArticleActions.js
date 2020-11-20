@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ArticleActions = props => {
-    const article = props.article;
+    const { article } = props;
     const del = () => {
         props.onClickDelete(userService.articles.del(article.slug));
         store.dispatch(push(`/`));

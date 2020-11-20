@@ -7,6 +7,11 @@ import { connect } from "react-redux";
 import actionCreators from "../../actionCreators";
 import {HeartTwoTone} from '@ant-design/icons';
 
+const mapStateToProps = (state) => {
+    return {
+        currentUser: state.mainstate.currentUser,
+    }};
+
 const mapDispatchToProps = dispatch => ({
     favorite: (slug) =>
         dispatch(actionCreators.doArticleLike(userService.articles.favorite(slug))),
@@ -15,9 +20,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ArticleData = (props) => {
-    const article = props.article;
+    const {article, currentUser} = props;
     const authorImage = article.author.image;
-    const isUserLoggedIn = props.isUserLoggedIn;
 
     const handleLikeClick = (e) => {
         e.preventDefault();
@@ -30,7 +34,9 @@ const ArticleData = (props) => {
 
     const articleTags = (tagList) => {
         const tags = tagList.map((tag) =>
-            <li className="articlePreview__tag" key={tag}>{tag}</li>
+            <li className="articlePreview__tag" key={tag}>
+                {tag}
+            </li>
         );
         return (
             <ul className="articlePreview__tagsList">
@@ -45,12 +51,11 @@ const ArticleData = (props) => {
                 <div className="articlePreview__titleBlock">
                     <div className="articlePreview__title">{article.title}</div>
                     <div className="articlePreview__like">
-                            <Button onClick={handleLikeClick} disabled={!isUserLoggedIn}>
-
+                        <Button onClick={handleLikeClick} disabled={!currentUser}>
                                 <HeartTwoTone
                                     twoToneColor={article.favorited ? "red" : "gray"}
                                 /> {article.favoritesCount}
-                            </Button>
+                        </Button>
                     </div>
                 </div>
                 <div className="articlePreview__date">
@@ -70,6 +75,6 @@ const ArticleData = (props) => {
     )
 };
 
-//export default connect(mapStateToProps, mapDispatchToProps)(ArticleData);
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleData);
 
-export default connect(() => ({}), mapDispatchToProps)(ArticleData);
+//export default connect(() => ({}), mapDispatchToProps)(ArticleData);

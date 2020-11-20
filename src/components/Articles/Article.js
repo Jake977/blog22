@@ -29,8 +29,7 @@ class Article extends React.Component {
     }
 
     render() {
-        const {article} = this.props;
-        const {currentUser} = this.props;
+        const {article, currentUser} = this.props;
 
         if (!article) return null;
 

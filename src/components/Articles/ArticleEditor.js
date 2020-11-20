@@ -94,7 +94,6 @@ class ArticleEditor extends React.Component {
     if (this.props.match.params.id !== newProps.match.params.id) {
       this.isLoading = true;
     }
-
     return true;
   }
 

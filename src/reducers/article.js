@@ -7,14 +7,18 @@ import {
 
 export default (state = {}, action) => {
     switch (action.type) {
-        case ARTICLE_LIKE:
-        case ARTICLE_UNLIKE:
-            return {
-                ...state,
-                //favorited: action.payload.article.favorited,
-                //favoritesCount: action.payload.article.favoritesCount
-            };
-
+        // case ARTICLE_LIKE:
+        // case ARTICLE_UNLIKE:
+        //     return {
+        //         ...state,
+        //         article: article => {
+        //             return {
+        //                 ...article,
+        //                 favorited: action.payload[0].article.favorited,
+        //                 favoritesCount: action.payload[0].article.favoritesCount,
+        //             }
+        //         }
+        //     };
         case ARTICLE_PAGE_LOADED:
             return {
                 ...state,
