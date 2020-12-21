@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ErrorsList from "../ErrorsList/ErrorsList";
 import userService from "../../services/userService";
 import { connect } from "react-redux";
@@ -17,14 +17,13 @@ const formSingleItemLayout = {
 };
 
 const mapStateToProps = (state) => ({
-  ...state.editor
+  editor: state.editor
+  //...state.editor
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onLoad: (payload) => dispatch(actionCreators.doEditorLoaded(payload)),
   onUnload: () => dispatch(actionCreators.doEditorUnloaded()),
-  onUpdateField: (key, value) =>
-    dispatch(actionCreators.doUpdateFieldEditor(key, value)),
   onSubmit: (payload, slug) => {
     dispatch(actionCreators.doArticleSubmitted(payload));
     store.dispatch(push(`/`)); //article/${slug}
@@ -32,149 +31,366 @@ const mapDispatchToProps = (dispatch) => ({
   onRedirect: () => dispatch(actionCreators.doRedirect())
 });
 
-class ArticleEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.id = this.props.match.params.id;
-    const updateFieldEvent = (key) => (e) =>
-      this.props.onUpdateField(key, e.target.value);
-    this.changeTitle = updateFieldEvent("title");
-    this.changeDescription = updateFieldEvent("description");
-    this.changeBody = updateFieldEvent("body");
-    this.changeTagInput = updateFieldEvent("tagInput");
-    this.isLoading = true;
+function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload, onSubmit, editor}) {
+  //const {errors, articleSlug, inProgress} = props;
+  const id = match.params.id;
 
-    this.submitForm = () => {
-      const article = {
-        title: this.props.title,
-        description: this.props.description,
-        body: this.props.body,
-        tagList: this.props.tagInput.split(",")
-      };
+  const [formValues, setValue] = useState({});
+  const [isLoading, setIsloading] = useState(false);
+  const [form] = Form.useForm();
 
-      const slug = { slug: this.props.articleSlug };
-      const promise = this.props.articleSlug
+  //const prevId = useRef(match.params.id);
+
+  const prevPropsId = useRef(match.params.id);
+
+  useEffect(() => {
+    function doShouldComponentUpdate() {
+      if (prevPropsId.current !== match.params.id) {
+        setIsloading(true);
+      }
+      prevPropsId.current = match.params.id;
+    }
+    doShouldComponentUpdate()
+  }, [match.params.id]);
+
+  //componentDidMount
+  useEffect(() => {
+    function doComponentDidMount() {
+      console.log('id: ', id);
+      if (id) {
+        setIsloading(true);
+        return onLoad(userService.articles.get(id));
+      }
+      setIsloading(false);
+      onLoad(null);
+      //componentWillUnmount
+      return function () {
+        onUnload()
+      }
+    }
+    doComponentDidMount();
+  }, [id, onLoad, onUnload]);
+
+  //componentDidUpdate
+  useEffect(() => {
+    function doComponentDidUpdate() {
+      if (id !== prevPropsId.current) {
+        if (prevPropsId.current) {
+          onUnload();
+        }
+        if (id) {
+          return onLoad(userService.articles.get(id));
+        }
+        onLoad(null);
+      }
+      setIsloading(false);
+    }
+    doComponentDidUpdate();
+  }, [isLoading, onLoad, onUnload, id]);
+
+  // //componentDidMount
+  // useEffect(() => {
+  //   if (props.match.params.id) {
+  //     setIsloading(true);
+  //     return props.onLoad(userService.articles.get(props.match.params.id));
+  //   }
+  //   setIsloading(false);
+  //   props.onLoad(null);
+  // }, [props.match.params.id]);
+
+
+// //componentDidMount
+//   useEffect(() => {
+//     if (id) {
+//       setIsloading(true);
+//       return props.onLoad(userService.articles.get(id));
+//     }
+//     setIsloading(false);
+//     props.onLoad(null);
+//
+//     //componentWillUnmount
+//     return function () {
+//       props.onUnload()
+//     }
+//   }, []);
+
+  //seEffect(() => {
+    //const {title, description, body, tags} = res.article;
+   // console.log('--------------useEff222', props)
+    // form.setFieldsValue({
+    //   title: title || '',
+    //   description: description || '',
+    //   body: body || '',
+    //   tags: tags || ''
+    // });
+   // }, [form]);
+
+
+  const changeTitle = (e) => {setValue(prev => ({...prev, title: e.target.value}))};
+  const changeDescription = (e) => {setValue(prev => ({...prev, description: e.target.value}))};
+  const changeBody = (e) => {e.persist(); setValue(prev => ({...prev, body: e.target.value}))};
+  const changeTags = (e) => {e.persist(); setValue(prev => ({...prev, tags: e.target.value}))};
+
+  const submitForm = () => {
+    const article = {
+      title: formValues.title,
+      description: formValues.description,
+      body: formValues.body,
+      tagList: formValues.tags ? formValues.tags.split(",") : ''
+    };
+
+    const slug = { slug: articleSlug };
+    const promise = articleSlug
         ? userService.articles.update(Object.assign(article, slug))
         : userService.articles.create(article);
 
-      this.props.onSubmit(promise, this.props.articleSlug);
-    };
-  }
+    onSubmit(promise, articleSlug);
+  };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
-      if (prevProps.match.params.id) {
-        this.props.onUnload();
-      }
+  const initialValues = {
+    title: editor?.title,
+    description: editor?.description,
+    body: editor?.body,
+    tags: editor?.tagList
+  };
 
-      this.id = this.props.match.params.id;
-      if (this.id) {
-        return this.props.onLoad(userService.articles.get(this.id));
-      }
-      this.props.onLoad(null);
-    }
+  console.log('editor: ', editor);
+  console.log('title:', editor?.title);
+  console.log('description:',  editor?.description);
+  console.log('body:', editor?.body);
+  // console.log('tags:', props?.tags);
 
-    this.isLoading = false;
-  }
-
-  componentDidMount() {
-    if (this.id) {
-      this.isLoading = true;
-      return this.props.onLoad(userService.articles.get(this.id));
-    }
-    this.isLoading = false;
-    this.props.onLoad(null);
-  }
-
-  componentWillUnmount() {
-    this.props.onUnload();
-  }
-
-  shouldComponentUpdate(newProps, newState) {
-    if (this.props.match.params.id !== newProps.match.params.id) {
-      this.isLoading = true;
-    }
-    return true;
-  }
-
-  render() {
-    const { errors } = this.props;
-    const initialValues = {
-      title: this.props?.title,
-      body: this.props?.body,
-      description: this.props?.description,
-      tags: this.props?.tagList
-    };
-
-    return this.isLoading ? (
-        <div className="loadingPlaceHolder">
-          <Spin tip="Loading..." size="large" />
-        </div>
-    ) : (
+  return isLoading ? (
+      <div className="loadingPlaceHolder">
+        <Spin tip="Loading..." size="large" />
+      </div>
+  ) : (
       <div className="editor-page">
         <div className="container page">
           <ErrorsList errors={errors}></ErrorsList>
           <div className='page__title'>
-            {this.props.articleSlug ? 'Edit article' : 'Create new article'}
+            {articleSlug ? 'Edit article' : 'Create new article'}
           </div>
           <div className="page__content">
-              <Form
-                {...formItemLayout}
-                initialValues={initialValues}
-                onFinish={this.submitForm}
+          <Form
+              {...formItemLayout}
+              form={form}
+              initialValues={initialValues}
+              onFinish={submitForm}
+          >
+            <Form.Item
+                label="Title"
+                name="title"
+                placeholder="Article Title"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input article title"
+                  }
+                ]}
+            >
+              <Input onChange={changeTitle} />
+            </Form.Item>
+
+            <Form.Item
+                label="Description"
+                name="description"
+                placeholder="Short description"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input article description"
+                  }
+                ]}
+            >
+              <Input onChange={changeDescription} />
+            </Form.Item>
+
+            <Form.Item
+                name="body"
+                label="Article Text"
+                placeholder="article text"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input article text"
+                  }
+                ]}
+            >
+              <Input.TextArea onChange={changeBody} />
+            </Form.Item>
+
+            <Form.Item name="tags" label="Tags" placeholder="Enter tags">
+              <Input onChange={changeTags} />
+            </Form.Item>
+
+            <Form.Item {...formSingleItemLayout}>
+              <Button
+                  className="editor-form__btn"
+                  type="primary"
+                  htmlType="submit"
+                  disabled={inProgress}
               >
-                <Form.Item
-                  label="Title"
-                  name="title"
-                  placeholder="Article Title"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input article title"
-                    }
-                  ]}
-                >
-                  <Input onChange={this.changeTitle} />
-                </Form.Item>
-                <Form.Item
-                  label="Description"
-                  name="description"
-                  placeholder="Short description"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input article description"
-                    }
-                  ]}
-                >
-                  <Input onChange={this.changeDescription} />
-                </Form.Item>
-                <Form.Item
-                  name="body"
-                  label="Article Text"
-                  placeholder="article text"
-                >
-                  <Input.TextArea onChange={this.changeBody} />
-                </Form.Item>
-                <Form.Item name="tags" label="Tags" placeholder="Enter tags">
-                  <Input onChange={this.changeTagInput} />
-                </Form.Item>
-                <Form.Item {...formSingleItemLayout}>
-                  <Button
-                    className="editor-form__btn"
-                    type="primary"
-                    htmlType="submit"
-                    disabled={this.props.inProgress}
-                  >
-                    Submit Article
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div>
+                Submit Article
+              </Button>
+            </Form.Item>
+          </Form>
           </div>
         </div>
-    );
-  }
+        <div>
+          id: {id}
+          <pre>
+            {JSON.stringify(formValues, null, 2)}
+          </pre>
+        </div>
+      </div>
+  );
 }
+
+
+// old ArticleEditor (class) - that works fine
+// class ArticleEditor2 extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.id = this.props.match.params.id;
+//     const updateFieldEvent = (key) => (e) =>
+//       this.props.onUpdateField(key, e.target.value);
+//     this.changeTitle = updateFieldEvent("title");
+//     this.changeDescription = updateFieldEvent("description");
+//     this.changeBody = updateFieldEvent("body");
+//     this.changeTagInput = updateFieldEvent("tagInput");
+//     this.isLoading = true;
+//
+//     this.submitForm = () => {
+//       const article = {
+//         title: this.props.title,
+//         description: this.props.description,
+//         body: this.props.body,
+//         tagList: this.props.tagInput.split(",")
+//       };
+//
+//       const slug = { slug: this.props.articleSlug };
+//       const promise = this.props.articleSlug
+//         ? userService.articles.update(Object.assign(article, slug))
+//         : userService.articles.create(article);
+//
+//       this.props.onSubmit(promise, this.props.articleSlug);
+//     };
+//   }
+//
+//   componentDidUpdate(prevProps, prevState) {
+//     if (this.props.match.params.id !== prevProps.match.params.id) {
+//       if (prevProps.match.params.id) {
+//         this.props.onUnload();
+//       }
+//
+//       this.id = this.props.match.params.id;
+//       if (this.id) {
+//         return this.props.onLoad(userService.articles.get(this.id));
+//       }
+//       this.props.onLoad(null);
+//     }
+//     this.isLoading = false;
+//   }
+//
+//   componentDidMount() {
+//     if (this.id) {
+//       this.isLoading = true;
+//       return this.props.onLoad(userService.articles.get(this.id));
+//     }
+//     this.isLoading = false;
+//     this.props.onLoad(null);
+//   }
+//
+//   componentWillUnmount() {
+//     this.props.onUnload();
+//   }
+//
+//   shouldComponentUpdate(newProps, newState) {
+//     if (this.props.match.params.id !== newProps.match.params.id) {
+//       this.isLoading = true;
+//     }
+//     return true;
+//   }
+//
+//   render() {
+//     const { errors } = this.props;
+//     const initialValues = {
+//       title: this.props?.title,
+//       body: this.props?.body,
+//       description: this.props?.description,
+//       tags: this.props?.tagList
+//     };
+//
+//     return this.isLoading ? (
+//         <div className="loadingPlaceHolder">
+//           <Spin tip="Loading..." size="large" />
+//         </div>
+//     ) : (
+//       <div className="editor-page">
+//         <div className="container page">
+//           <ErrorsList errors={errors}></ErrorsList>
+//           <div className='page__title'>
+//             {this.props.articleSlug ? 'Edit article' : 'Create new article'}
+//           </div>
+//           <div className="page__content">
+//               <Form
+//                 {...formItemLayout}
+//                 initialValues={initialValues}
+//                 onFinish={this.submitForm}
+//               >
+//                 <Form.Item
+//                   label="Title"
+//                   name="title"
+//                   placeholder="Article Title"
+//                   rules={[
+//                     {
+//                       required: true,
+//                       message: "Please input article title"
+//                     }
+//                   ]}
+//                 >
+//                   <Input onChange={this.changeTitle} />
+//                 </Form.Item>
+//                 <Form.Item
+//                   label="Description"
+//                   name="description"
+//                   placeholder="Short description"
+//                   rules={[
+//                     {
+//                       required: true,
+//                       message: "Please input article description"
+//                     }
+//                   ]}
+//                 >
+//                   <Input onChange={this.changeDescription} />
+//                 </Form.Item>
+//                 <Form.Item
+//                   name="body"
+//                   label="Article Text"
+//                   placeholder="article text"
+//                 >
+//                   <Input.TextArea onChange={this.changeBody} />
+//                 </Form.Item>
+//                 <Form.Item name="tags" label="Tags" placeholder="Enter tags">
+//                   <Input onChange={this.changeTagInput} />
+//                 </Form.Item>
+//                 <Form.Item {...formSingleItemLayout}>
+//                   <Button
+//                     className="editor-form__btn"
+//                     type="primary"
+//                     htmlType="submit"
+//                     disabled={this.props.inProgress}
+//                   >
+//                     Submit Article
+//                   </Button>
+//                 </Form.Item>
+//               </Form>
+//             </div>
+//           </div>
+//         </div>
+//     );
+//   }
+// }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArticleEditor);
