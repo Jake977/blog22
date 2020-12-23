@@ -110,11 +110,11 @@ function ArticleEditor(props) {
       title: formValues.title,
       description: formValues.description,
       body: formValues.body,
-      tagList: formValues.tags ? formValues.tags.split(",") : ''
+      tagList: formValues.tags ? formValues.tags.split(',') : ''
     };
 
-    const slug = { slug: articleSlug };
-    const promise = articleSlug
+    const slug = { slug: id };
+    const promise = id
         ? userService.articles.update(Object.assign(article, slug))
         : userService.articles.create(article);
 
@@ -205,12 +205,12 @@ function ArticleEditor(props) {
           </Form>
           </div>
         </div>
-        <div>
-          id: {id}
-          <pre>
-            {JSON.stringify(formValues, null, 2)}
-          </pre>
-        </div>
+        {/*<div>*/}
+        {/*  id: {id}*/}
+        {/*  <pre>*/}
+        {/*    {JSON.stringify(formValues, null, 2)}*/}
+        {/*  </pre>*/}
+        {/*</div>*/}
       </div>
   );
 }
