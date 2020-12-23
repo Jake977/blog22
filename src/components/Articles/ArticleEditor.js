@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import ErrorsList from "../ErrorsList/ErrorsList";
 import userService from "../../services/userService";
 import { connect } from "react-redux";
@@ -33,18 +33,19 @@ const mapDispatchToProps = (dispatch) => ({
 function ArticleEditor(props) {
   const {errors, articleSlug, inProgress, onLoad, match, onUnload, onSubmit, editor} = props;
   const id = match.params.id;
-  const [formValues, setValue] = useState({});
-  const [isLoading, setIsloading] = useState(false);
   const prevPropsId = useRef(id);
+  const [isLoading, setIsloading] = useState(false);
+  const [formValues, setValue] = useState({});
   const [form] = Form.useForm();
 
-  const setFormFields = (editor) => {
+  const setFormData = useCallback((editor) => {
     form.setFieldsValue({
       title: editor?.title || '',
       description: editor?.description || '',
       body: editor?.body || '',
       tags: editor?.tagList,
     });
+
     setValue(prev => ({
       ...prev,
       title: editor?.title,
@@ -52,7 +53,20 @@ function ArticleEditor(props) {
       body: editor?.body,
       tags: editor?.tagList,
     }))
-  };
+  },[form]);
+
+  const doComponentDidUpdate = useCallback(() => {
+    if (id !== prevPropsId.current) {
+      if (prevPropsId.current) {
+        onUnload();
+      }
+      if (id) {
+        return onLoad(userService.articles.get(id));
+      }
+      onLoad(null);
+    }
+    setIsloading(false);
+  }, [id, onLoad, onUnload]);
 
   useEffect(() => {
     function doShouldComponentUpdate() {
@@ -67,7 +81,6 @@ function ArticleEditor(props) {
   //componentDidMount
   useEffect(() => {
     function doComponentDidMount() {
-      console.log('id: ', id);
       if (id) {
         setIsloading(true);
         return onLoad(userService.articles.get(id));
@@ -82,22 +95,10 @@ function ArticleEditor(props) {
     doComponentDidMount();
   }, [id, onLoad, onUnload]);
 
-  useEffect(() => {
-    function doComponentDidUpdate() {
-      if (id !== prevPropsId.current) {
-        if (prevPropsId.current) {
-          onUnload();
-        }
-        if (id) {
-          return onLoad(userService.articles.get(id));
-        }
-        onLoad(null);
-      }
-      setIsloading(false);
-    }
+  useEffect(()=> {
     doComponentDidUpdate();
-    setFormFields(editor);
-  }, [ id, onLoad, onUnload, editor]);
+    setFormData(editor);
+  }, [doComponentDidUpdate, editor, setFormData]);
 
   const changeTitle = (e) => {setValue(prev => ({...prev, title: e.target.value}))};
   const changeDescription = (e) => {setValue(prev => ({...prev, description: e.target.value}))};
