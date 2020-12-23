@@ -31,27 +31,39 @@ const mapDispatchToProps = (dispatch) => ({
   onRedirect: () => dispatch(actionCreators.doRedirect())
 });
 
-function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload, onSubmit, editor}) {
-  //const {errors, articleSlug, inProgress} = props;
+function ArticleEditor(props) {
+  const {errors, articleSlug, inProgress, onLoad, match, onUnload, onSubmit, editor} = props;
   const id = match.params.id;
-
   const [formValues, setValue] = useState({});
   const [isLoading, setIsloading] = useState(false);
+  const prevPropsId = useRef(id);
   const [form] = Form.useForm();
 
-  //const prevId = useRef(match.params.id);
-
-  const prevPropsId = useRef(match.params.id);
+  const setFormFields = (editor) => {
+    form.setFieldsValue({
+      title: editor?.title || '',
+      description: editor?.description || '',
+      body: editor?.body || '',
+      tags: editor?.tagList,
+    });
+    setValue(prev => ({
+      ...prev,
+      title: editor?.title,
+      description: editor?.description,
+      body: editor?.body,
+      tags: editor?.tagList,
+    }))
+  };
 
   useEffect(() => {
     function doShouldComponentUpdate() {
-      if (prevPropsId.current !== match.params.id) {
+      if (prevPropsId.current !== id) {
         setIsloading(true);
       }
-      prevPropsId.current = match.params.id;
+      prevPropsId.current = id;
     }
     doShouldComponentUpdate()
-  }, [match.params.id]);
+  }, [id]);
 
   //componentDidMount
   useEffect(() => {
@@ -71,7 +83,6 @@ function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload
     doComponentDidMount();
   }, [id, onLoad, onUnload]);
 
-  //componentDidUpdate
   useEffect(() => {
     function doComponentDidUpdate() {
       if (id !== prevPropsId.current) {
@@ -86,45 +97,8 @@ function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload
       setIsloading(false);
     }
     doComponentDidUpdate();
-  }, [isLoading, onLoad, onUnload, id]);
-
-  // //componentDidMount
-  // useEffect(() => {
-  //   if (props.match.params.id) {
-  //     setIsloading(true);
-  //     return props.onLoad(userService.articles.get(props.match.params.id));
-  //   }
-  //   setIsloading(false);
-  //   props.onLoad(null);
-  // }, [props.match.params.id]);
-
-
-// //componentDidMount
-//   useEffect(() => {
-//     if (id) {
-//       setIsloading(true);
-//       return props.onLoad(userService.articles.get(id));
-//     }
-//     setIsloading(false);
-//     props.onLoad(null);
-//
-//     //componentWillUnmount
-//     return function () {
-//       props.onUnload()
-//     }
-//   }, []);
-
-  //seEffect(() => {
-    //const {title, description, body, tags} = res.article;
-   // console.log('--------------useEff222', props)
-    // form.setFieldsValue({
-    //   title: title || '',
-    //   description: description || '',
-    //   body: body || '',
-    //   tags: tags || ''
-    // });
-   // }, [form]);
-
+    setFormFields(editor);
+  }, [ id, onLoad, onUnload, editor]);
 
   const changeTitle = (e) => {setValue(prev => ({...prev, title: e.target.value}))};
   const changeDescription = (e) => {setValue(prev => ({...prev, description: e.target.value}))};
@@ -153,12 +127,6 @@ function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload
     body: editor?.body,
     tags: editor?.tagList
   };
-
-  console.log('editor: ', editor);
-  console.log('title:', editor?.title);
-  console.log('description:',  editor?.description);
-  console.log('body:', editor?.body);
-  // console.log('tags:', props?.tags);
 
   return isLoading ? (
       <div className="loadingPlaceHolder">
@@ -246,7 +214,6 @@ function ArticleEditor({errors, articleSlug, inProgress, match, onLoad, onUnload
       </div>
   );
 }
-
 
 // old ArticleEditor (class) - that works fine
 // class ArticleEditor2 extends React.Component {
